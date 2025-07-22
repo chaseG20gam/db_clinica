@@ -1,0 +1,64 @@
+Table Patient {
+  patient_id int [primary key]
+  first_name varchar(100)
+  last_name varchar(100)
+  date_of_birth date
+  gender enum("M","F","Other")
+  email varchar(100)
+  phone varchar(20)
+  age int
+  blood_type varchar(5)
+  allergy_type varchar(100)
+  chronic_disease text
+  weight float
+  height float
+  bmi float
+  weight_level enum("underweight", "overweight", "obese")
+}
+
+Table Specialist {
+  specialist_id int [primary key]
+  first_name varchar(100)
+  last_name varchar(100)
+  date_of_birth date
+  gender enum("M", "F", "Other")
+  specialty varchar(100)
+  phone varchar(20)
+  email varchar(100)
+}
+
+Table Medical_Record {
+  record_id int [primary key]
+  patient_id int [ref: > Patient.patient_id]
+  city varchar(100)
+  district varchar(100)
+  created_at date
+  consultation_notes text
+}
+
+Table Diagnosis {
+  diagnosis_id int [primary key]
+  record_id int [ref: > Medical_Record.record_id]
+  diagnosis text
+  prescription text
+}
+
+Table Appointment {
+  appointment_id int [primary key]
+  patient_id int [ref: > Patient.patient_id]
+  specialist_id int [ref: > Specialist.specialist_id]
+  appointment_date date
+  appointment_time time
+  consultation_reason text
+  blood_pressure varchar(20)
+  status enum("Scheduled", "Completed", "Cancelled")
+  shift enum("Morning", "Afternoon", "Evening")
+}
+
+Table Appointment_Schedule {
+  schedule_id int [primary key]
+  appointment_id int [ref: > Appointment.appointment_id]
+  created_at date
+  scheduled_date date
+  scheduled_time time
+}
