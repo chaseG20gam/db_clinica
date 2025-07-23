@@ -1,5 +1,5 @@
 -- Create a new schema
-CREATE SCHEMA CLINIC AUTHORIZATION postgres;
+CREATE SCHEMA CLINIC AUTHORIZATION admin;
 
 -- Drop the default schema
 DROP SCHEMA PUBLIC;
@@ -131,6 +131,21 @@ INSERT INTO CLINIC.SPECIALIST (
 ('ME-0009', 'Riku', 'Ando', 'M', '1983-08-25', 'Endocrinology'),
 ('ME-0010', 'Emi', 'Kojima', 'F', '1989-10-11', 'General Medicine');
 
+-- INSERT MEDICAL RECORDS
+INSERT INTO CLINIC.MEDICAL_RECORD (
+	  pk_patient_id, blood_type, allergy_type, chronic_condition, created_at
+) VALUES
+('P-0001', 'A+', 'None', 'None', '2023-10-01 10:23:00'),
+('P-0002', 'B-', 'Peanuts', 'Asthma', '2023-10-02 11:011:00'),
+('P-0003', 'O+', 'Crustacean', 'Diabetes', '2023-10-03 12:43:00'),
+('P-0004', 'AB+', 'Penicillin', 'Hypertension', '2023-10-04 12:51:00'),
+('P-0005', 'A-', 'Latex', 'None', '2023-11-05 14:50:00'),
+('P-0006', 'B+', 'None', 'Anxiety', '2023-11-06 15:13:00'),
+('P-0007', 'O-', 'Shellfish', 'None', '2023-11-27 16:15:00'),
+('P-0008', 'AB-', 'None', 'None', '2023-12-18 17:03:00'),
+('P-0009', 'A+', 'None', 'Obesity', '2023-12-09 17:32:00'),
+('P-0010', 'B-', 'Dust Mites', 'None', '2023-12-09 20:28:00');
+
 ALTER TABLE CLINIC.PATIENT
 ADD COLUMN age INT,
 ADD COLUMN height NUMERIC(5,2), -- in cm or meters, adjust as needed
@@ -179,3 +194,126 @@ WHERE pk_patient_id = 'P-0009';
 UPDATE CLINIC.PATIENT
 SET height = 1.58, weight = 50.0, blood_pressure = '115/70', prescription = 'Calcium supplement'
 WHERE pk_patient_id = 'P-0010';
+
+-- add email
+
+ALTER TABLE CLINIC.PATIENT
+ADD COLUMN email VARCHAR(100);
+
+
+update clinic.patient
+set email = 'haruki.takahashi@example.jp'
+where pk_patient_id = 'P-0001';
+
+update clinic.patient
+set email = 'yuki.sato@example.jp'
+where pk_patient_id = 'P-0002';
+
+update clinic.patient
+set email = 'ren.kobayashi@example.jp'
+where pk_patient_id = 'P-0003';
+
+update clinic.patient
+set email = 'aoi.tanaka@example.jp'
+where pk_patient_id = 'P-0004';
+
+update clinic.patient
+set email = 'kaito.yamamoto@example.jp'
+where pk_patient_id = 'P-0005';
+
+update clinic.patient
+set email = 'sora.inoue@example.jp'
+where pk_patient_id = 'P-0006';
+
+update clinic.patient
+set email = 'hikaru.fujimoto@example.jp'
+where pk_patient_id = 'P-0007';
+
+update clinic.patient
+set email = 'miyu.shimizu@example.jp'
+where pk_patient_id = 'P-0008';
+
+update clinic.patient
+set email = 'takumi.okamoto@example.jp'
+where pk_patient_id = 'P-0009';
+
+update clinic.patient
+set email = 'riko.nakamura@example.jp'
+where pk_patient_id = 'P-0010';
+
+--insert appointments and schedule appointments
+INSERT INTO CLINIC.APPOINTMENT (
+	  pk_appointment_id, fk_patient_id, date, time
+) VALUES
+('CM-0001', 'P-0001', '2023-10-05', '10:00:00'),
+('CM-0002', 'P-0002', '2023-10-06', '11:00:00'),
+('CM-0003', 'P-0003', '2023-10-07', '12:00:00'),
+('CM-0004', 'P-0004', '2023-10-08', '13:00:00'),
+('CM-0005', 'P-0005', '2023-10-09', '14:00:00'),
+('CM-0006', 'P-0006', '2023-10-10', '15:00:00'),
+('CM-0007', 'P-0007', '2023-10-11', '16:00:00'),
+('CM-0008', 'P-0008', '2023-10-12', '17:00:00'),
+('CM-0009', 'P-0009', '2023-10-13', '18:00:00'),
+('CM-0010', 'P-0010', '2023-10-14', '19:00:00');
+
+INSERT INTO CLINIC.SCHEDULE_APPOINTMENT (
+	  fk_appointment_id, fk_specialist_id, room, appointment_date, appointment_time, shift, status, notes
+) VALUES
+('CM-0001', 'ME-0001', 'Room 101', '2023-10-05', '10:00:00', 'Morning', 'Scheduled', 'Initial consultation'),
+('CM-0002', 'ME-0002', 'Room 102', '2023-10-06', '11:00:00', 'Morning', 'Scheduled', 'Follow-up visit'),
+('CM-0003', 'ME-0003', 'Room 103', '2023-10-07', '12:00:00', 'Afternoon', 'Scheduled', 'Skin check-up'),
+('CM-0004', 'ME-0004', 'Room 104', '2023-10-08', '13:00:00', 'Afternoon', 'Scheduled', 'Pediatric assessment'),
+('CM-0005', 'ME-0005', 'Room 105', '2023-10-09', '14:00:00', 'Afternoon', 'Scheduled', 'Orthopedic evaluation'),
+('CM-0006', 'ME-0006', 'Room 106', '2023-10-10', '15:00:00', 'Evening', 'Scheduled', 'Psychiatric consultation'),
+('CM-0007', 'ME-0007', 'Room 107', '2023-10-11', '16:00:00', 'Evening', 'Scheduled', 'Oncology review'),
+('CM-0008', 'ME-0008', 'Room 108', '2023-10-12', '17:00:00', 'Evening', 'Scheduled', 'Gastroenterology check'),
+('CM-0009', 'ME-0009', 'Room 109', '2023-10-13', '18:00:00', 'Evening', 'Scheduled', 'Endocrinology assessment'),
+('CM-0010', 'ME-0010', 'Room 110', '2023-10-14', '19:00:00', 'Evening', 'Scheduled','General medicine follow-up');
+
+-- delete a patient
+DELETE FROM CLINIC.PATIENT
+WHERE pk_patient_id = 'P-0005';	
+
+-- delete a specialist
+DELETE FROM CLINIC.SPECIALIST
+WHERE pk_specialist_id = 'ME-0003';
+
+--insert medical diagnosis
+INSERT INTO CLINIC.MEDICAL_DIAGNOSIS (
+	  fk_specialist_id, fk_patient_id, age, weight, height, bmi, weight_level, blood_pressure, diagnosis, prescription, created_at
+) VALUES
+('ME-0001', 'P-0001', '38', '65.0', '172', '22.0', 'Normal', '120/80', 'Healthy', 'Vitamin D supplement', '2023-10-01 10:30:00'),
+('ME-0002', 'P-0002', '33', '52.0', '160', '20.3', 'Normal', '110/70', 'Allergic Rhinitis', 'Antihistamines', '2023-10-02 11:15:00'),
+('ME-0003', 'P-0003', '21', '75.0', '168', '26.6', 'Overweight', '130/85', 'Type 2 Diabetes', 'Metformin', '2023-10-03 12:45:00'),
+('ME-0004', 'P-0004', '28', '90.0', '175', '29.4', 'Obese', '140/90', 'Hypertension', 'Lisinopril', '2023-10-04 12:55:00'),
+('ME-0005', 'P-0006', '30', '85.0', '180', '26.2', 'Overweight', '125/80', 'Anxiety Disorder', 'Omega-3', '2023-11-06 15:15:00'),
+('ME-0006', 'P-0007', '44', '70.0', '165', '25.7', 'Normal', '118/75', 'Joint Pain', 'Ibuprofen as needed', '2023-11-27 16:20:00'),
+('ME-0007', 'P-0008', '23', '68.0', '162', '25.9', 'Normal', '128/78', 'Asthma', 'Inhaler - Salbutamol', '2023-12-18 17:05:00'),
+('ME-0008', 'P-0009', '32', '60.0', '170', '20.8', 'Normal', '122/76', 'Gastritis', 'Antacids', '2023-12-09 17:35:00'),
+('ME-0009', 'P-0010', '31', '50.0', '158', '20.0', 'Normal', '115/70', 'Calcium Deficiency', 'Calcium supplement', '2023-12-09 20:30:00');		
+
+-- inner join exaple
+select * from clinic.patient
+inner join clinic.medical_record
+on patient.pk_patient_id = medical_record.pk_patient_id;
+
+-- complex inner join exaple
+select * from clinic.patient
+inner join clinic.medical_record
+on patient.pk_patient_id = medical_record.pk_patient_id
+inner join clinic.medical_diagnosis
+on medical_record.pk_patient_id = medical_diagnosis.fk_patient_id
+inner join clinic.specialist
+on medical_diagnosis.fk_specialist_id = specialist.pk_specialist_id;
+where patient.pk_patient_id = 'P-0001';
+
+-- view creations
+create view clinic.masculine_patients as 
+	select * from clinic.patient where gender = 'F';
+
+--nested consultation
+select * from  clinic.specialist
+	where pk_specialist_id
+	not in (select fk_specialist_id
+		from clinic.schedule_appointment
+		where appointment_date between '2022-10-05' and '2021-10-05')
